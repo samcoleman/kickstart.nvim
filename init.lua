@@ -141,6 +141,22 @@ vim.o.timeoutlen = 300
 vim.o.splitright = true
 vim.o.splitbelow = true
 
+-- Use tabs instead of spaces
+vim.o.expandtab = false
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+vim.o.softtabstop = 2
+
+-- Convert spaces to tabs on save
+vim.api.nvim_create_autocmd('BufWritePre', {
+  pattern = '*',
+  callback = function()
+    if vim.bo.expandtab == false then
+      vim.cmd('retab')
+    end
+  end,
+})
+
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
@@ -1012,5 +1028,20 @@ require('lazy').setup({
   },
 })
 
+-- In your Neovim config
+require('lspconfig').zls.setup {
+  cmd = { '/usr/bin/zls' },
+  filetypes = { 'zig' },
+  settings = {
+    zls = {
+      zig_exe_path = '/usr/bin/zig',
+      enable_snippets = true,
+      warn_style = true,
+      enable_semantic_tokens = true,
+      operator_completions = true,
+    },
+  },
+}
+
 -- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=2 sts=2 sw=2
